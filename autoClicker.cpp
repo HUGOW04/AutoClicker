@@ -2,15 +2,21 @@
 
 int main()
 {
-    string choice;
-    click autoclickClicker;
-    autoclickClicker.start();
-    cout << "Again?   (y) or (n)" << endl;
-    cin>>choice;
-    if(choice == "y")
+    while(true)
     {
-        system("cls");
-        autoclickClicker.start();
-    }
-    
+        string choice;
+        click autoClick;
+        autoClick.start();
+        cout << "Again?   (y) or (n)" << endl;
+        cin>>choice;
+        if(choice == "y")
+        {
+            system("cls");
+            autoClick.start();
+        }
+        else
+        {
+            break;
+        }
+    }  
 }
