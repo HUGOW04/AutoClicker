@@ -1,4 +1,4 @@
-#include "auto.h"
+#include "autoClicker.h"
 
 int main()
 {
