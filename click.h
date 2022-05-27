@@ -29,9 +29,10 @@ public:
 			if (click)
 			{
 				system("cls");
-				mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 				countClicks++;
+				std::cout << "Press 'X' to enable and 'Z' to disable autoclicker\n";
 				std::cout << "Total clicks: " << countClicks;
+				mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 				mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 				Sleep(1);
 			}
