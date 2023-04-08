@@ -39,7 +39,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 	// Create window 
-	hWnd = CreateWindowEx(WS_EX_CLIENTEDGE, szClassName, "AutoClicker", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 500, 450, NULL, NULL, hInstance, NULL);
+	hWnd = CreateWindowEx(WS_EX_CLIENTEDGE, szClassName, "AutoClicker", WS_CAPTION |  WS_OVERLAPPEDWINDOW &~(WS_MAXIMIZEBOX | WS_MINIMIZEBOX), CW_USEDEFAULT, CW_USEDEFAULT, 300, 100, NULL, NULL, hInstance, NULL);
 	if (hWnd == NULL)
 	{
 		MessageBox(NULL,"Window Creation Failed!","Error", MB_ICONERROR | MB_OK);
@@ -75,6 +75,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	HDC hdc;
 	TCHAR clickPaint[] = "Clicks: ";
+	TCHAR info[] = "Press 'Q' to start and 'W' to stop";
 	switch (msg)
 	{
 	case WM_DESTROY:
@@ -86,6 +87,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		// For this introduction, we just print out "CheatEngine!"
 		// in the bottom left corner.
 		TextOut(hdc, 10, 20, clickPaint, _tcslen(clickPaint));
+		TextOut(hdc, 10, 40, info, _tcslen(info));
 		// End application-specific layout section.
 		EndPaint(hWnd, &ps);
 		break;
