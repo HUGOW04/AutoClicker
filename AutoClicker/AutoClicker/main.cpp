@@ -97,6 +97,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			60, 20, 200, 20,
 			hWnd, (HMENU)CLICKS, NULL, NULL);
 		break;
+	case WM_NCHITTEST:
+		// Get the screen cordinates of the cursor.
+		POINT ptCursor;
+		ptCursor.x = LOWORD(lParam);
+		ptCursor.y = HIWORD(lParam);
+		ScreenToClient(hWnd, &ptCursor);
+
+		// Check if the cursor is over the window's border
+		RECT rcClient;
+		GetClientRect(hWnd, &rcClient);
+		if (!PtInRect(&rcClient, ptCursor))
+		{
+			// Cursor is over the border, so prevent resizing
+			return HTCLIENT;
+		}
+		break;
 	default:
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
