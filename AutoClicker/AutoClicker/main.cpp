@@ -1,4 +1,8 @@
 #include <Windows.h>
+#include <tchar.h>
+#include <string>
+
+#define CLICKS 1
 
 // Function prototypes
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -6,9 +10,11 @@ LRESULT CALLBACK keyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam);
 void click();
 
 // Global variables
+HWND hWnd;
 const char szClassName[] = "AutoClicker";
 HHOOK g_hook = NULL;
 bool g_clicking = false;
+int clickcount = 0;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -33,7 +39,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 	// Create window 
-	HWND hWnd = CreateWindowEx(WS_EX_CLIENTEDGE, szClassName, "AutoClicker", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 240, 120, NULL, NULL, hInstance, NULL);
+	hWnd = CreateWindowEx(WS_EX_CLIENTEDGE, szClassName, "AutoClicker", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 500, 450, NULL, NULL, hInstance, NULL);
 	if (hWnd == NULL)
 	{
 		MessageBox(NULL,"Window Creation Failed!","Error", MB_ICONERROR | MB_OK);
@@ -66,10 +72,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	PAINTSTRUCT ps;
+	HDC hdc;
+	TCHAR clickPaint[] = "Clicks: ";
 	switch (msg)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		break;
+	case WM_PAINT:
+		hdc = BeginPaint(hWnd, &ps);
+		// Here your application is laid out.
+		// For this introduction, we just print out "CheatEngine!"
+		// in the bottom left corner.
+		TextOut(hdc, 10, 20, clickPaint, _tcslen(clickPaint));
+		// End application-specific layout section.
+		EndPaint(hWnd, &ps);
+		break;
+	case WM_CREATE:
+		CreateWindow("Static", "0",
+			WS_VISIBLE | WS_CHILD,
+			60, 20, 200, 20,
+			hWnd, (HMENU)CLICKS, NULL, NULL);
 		break;
 	default:
 		return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -91,6 +115,9 @@ LRESULT CALLBACK keyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 				while (g_clicking)
 				{
 					click();
+					clickcount++;
+					std::string num = std::to_string(clickcount);
+					SetWindowText(GetDlgItem(hWnd, CLICKS), num.c_str());
 					MSG msg;
 					while (PeekMessage(&msg,NULL,0,0,PM_REMOVE))
 					{
